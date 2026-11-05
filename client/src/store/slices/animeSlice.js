@@ -109,6 +109,7 @@ const initialState = {
   selectedGenre: '',
   searchQuery: '',
   currentPage: 1,
+  loadedSignature: null,
   hasNextPage: true,
   loading: false,
   loadingMore: false,
@@ -145,6 +146,7 @@ const animeSlice = createSlice({
       state.selectedGenre = '';
       state.activeFilter = '';
       state.currentPage = 1;
+      state.loadedSignature = null;
     },
   },
   extraReducers: (builder) => {
@@ -160,6 +162,8 @@ const animeSlice = createSlice({
       .addCase(fetchPopularAnime.fulfilled, (state, action) => {
         state.loading = false;
         state.loadingMore = false;
+        const resolvedPage = Number(action.meta.arg?.page) || 1;
+        state.currentPage = resolvedPage;
         if (action.payload.append) {
           state.popularList = deduplicateByMalId(state.popularList, action.payload.data);
         } else {
@@ -167,6 +171,7 @@ const animeSlice = createSlice({
         }
         state.hasNextPage = Boolean(action.payload.pagination?.has_next_page);
         state.isSearchActive = false;
+        state.loadedSignature = `popular|${state.activeType}|${state.activeFilter}|${resolvedPage}`;
       })
       .addCase(fetchPopularAnime.rejected, (state, action) => {
         state.loading = false;
@@ -184,6 +189,8 @@ const animeSlice = createSlice({
       .addCase(searchAnimeCatalog.fulfilled, (state, action) => {
         state.loading = false;
         state.loadingMore = false;
+        const resolvedPage = Number(action.meta.arg?.page) || 1;
+        state.currentPage = resolvedPage;
         if (action.payload.append) {
           state.searchResults = deduplicateByMalId(state.searchResults, action.payload.data);
         } else {
@@ -191,6 +198,7 @@ const animeSlice = createSlice({
         }
         state.hasNextPage = Boolean(action.payload.pagination?.has_next_page);
         state.isSearchActive = true;
+        state.loadedSignature = `search|${state.activeType}|${state.selectedGenre}|${state.searchQuery.trim()}|${resolvedPage}`;
       })
       .addCase(searchAnimeCatalog.rejected, (state, action) => {
         state.loading = false;

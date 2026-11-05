@@ -25,6 +25,7 @@ import {
   RefreshCw,
   Image as ImageIcon,
   Layers,
+  Skull,
 } from 'lucide-react';
 import {
   generateMoodRecommendations,
@@ -92,6 +93,24 @@ const MOOD_CARDS = [
     color: 'from-rose-500/20 to-pink-500/5 border-rose-500/30 text-rose-300',
     prompt:
       'Pengen tontonan romantis tentang kisah cinta yang manis, chemistry karakter yang gemes, dan bikin senyum sendiri.',
+  },
+  {
+    id: 'horror',
+    title: 'Horor & Atmosfer Mencekam',
+    subtitle: 'Teror mistis, kutukan & gelap',
+    icon: Skull,
+    color: 'from-red-500/20 to-rose-900/10 border-red-500/30 text-red-300',
+    prompt:
+      'Lagi pengen banget nonton anime horror yang serem, punya atmosfer mencekam, kutukan, dan teror supernatural.',
+  },
+  {
+    id: 'fantasy',
+    title: 'Petualangan Dunia Fantasi',
+    subtitle: 'Dunia sihir & perjalanan jauh',
+    icon: Compass,
+    color: 'from-cyan-500/20 to-teal-500/5 border-cyan-500/30 text-cyan-300',
+    prompt:
+      'Pengen ngikutin cerita petualangan di dunia fantasi yang luas, penuh sihir, dan punya pembangunan dunia yang megah.',
   },
 ];
 
@@ -356,12 +375,12 @@ export default function MoodSyncPage() {
           </div>
         </div>
 
-        {/* 6 Visual Mood Preset Cards */}
+        {/* Visual Mood Preset Cards */}
         <div className="space-y-2.5">
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
             Atau Pilih Langsung Suasana di Bawah Ini:
           </span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
             {MOOD_CARDS.map((card) => {
               const Icon = card.icon;
               const isSelected = moodPrompt === card.prompt;
