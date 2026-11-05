@@ -254,7 +254,7 @@ const FALLBACK_CATALOG = [
     images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/1015/138006.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/1015/138006l.jpg' } },
     trailer: { youtube_id: 'ZEkwCGJ3o7M', url: 'https://www.youtube.com/watch?v=ZEkwCGJ3o7M', embed_url: 'https://www.youtube-nocookie.com/embed/ZEkwCGJ3o7M' },
     streaming: buildStreamingLinks('Sousou no Frieren'),
-    genres: [{ mal_id: 36, name: 'Slice of Life' }, { mal_id: 2, name: 'Adventure' }, { mal_id: 10, name: 'Fantasy' }]
+    genres: [{ mal_id: 2, name: 'Adventure' }, { mal_id: 8, name: 'Drama' }, { mal_id: 10, name: 'Fantasy' }]
   },
   {
     mal_id: 34798,
@@ -267,7 +267,7 @@ const FALLBACK_CATALOG = [
     score: 8.25,
     year: 2018,
     synopsis: 'Rin Shima loves camping solo along the scenic lakes of Mount Fuji. When she meets Nadeshiko Kagamihara, their cozy outdoor adventures, warm campfires, and hot food create the ultimate healing experience.',
-    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/4/89477.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/4/89477l.jpg' } },
+    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/4/89877.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/4/89877l.jpg' } },
     trailer: { youtube_id: 's9Vc3n99_qx', url: 'https://www.youtube.com/watch?v=s9Vc3n99_qx', embed_url: null },
     streaming: buildStreamingLinks('Yuru Camp Laid Back Camp'),
     genres: [{ mal_id: 36, name: 'Slice of Life' }, { mal_id: 4, name: 'Comedy' }]
@@ -286,7 +286,7 @@ const FALLBACK_CATALOG = [
     images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/6/79597.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/6/79597l.jpg' } },
     trailer: { youtube_id: 'ByXuk9QqQkk', url: 'https://www.youtube.com/watch?v=ByXuk9QqQkk', embed_url: 'https://www.youtube-nocookie.com/embed/ByXuk9QqQkk' },
     streaming: buildStreamingLinks('Spirited Away'),
-    genres: [{ mal_id: 36, name: 'Slice of Life' }, { mal_id: 2, name: 'Adventure' }, { mal_id: 10, name: 'Fantasy' }]
+    genres: [{ mal_id: 2, name: 'Adventure' }, { mal_id: 10, name: 'Fantasy' }, { mal_id: 37, name: 'Supernatural' }]
   },
   {
     mal_id: 22789,
@@ -299,7 +299,7 @@ const FALLBACK_CATALOG = [
     score: 8.37,
     year: 2014,
     synopsis: 'Stressed calligrapher Seishuu Handa moves to the peaceful Goto Islands, where the carefree islanders and energetic little Naru teach him how to slow down and enjoy life.',
-    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/1405/110626.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/1405/110626l.jpg' } },
+    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/3/64627.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/3/64627l.jpg' } },
     trailer: { youtube_id: null, url: null, embed_url: null },
     streaming: buildStreamingLinks('Barakamon'),
     genres: [{ mal_id: 36, name: 'Slice of Life' }, { mal_id: 4, name: 'Comedy' }]
@@ -334,7 +334,7 @@ const FALLBACK_CATALOG = [
     images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/1598/128450.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/1598/128450l.jpg' } },
     trailer: { youtube_id: '5pTcio2hTSw', url: 'https://www.youtube.com/watch?v=5pTcio2hTSw', embed_url: 'https://www.youtube-nocookie.com/embed/5pTcio2hTSw' },
     streaming: buildStreamingLinks('Suzume no Tojimari'),
-    genres: [{ mal_id: 36, name: 'Slice of Life' }, { mal_id: 2, name: 'Adventure' }, { mal_id: 10, name: 'Fantasy' }]
+    genres: [{ mal_id: 2, name: 'Adventure' }, { mal_id: 10, name: 'Fantasy' }, { mal_id: 7, name: 'Mystery' }]
   },
 
   // --- CATHARTIC / DRAMA / TEARJERKER (Genre 8) ---
@@ -352,7 +352,7 @@ const FALLBACK_CATALOG = [
     images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/1122/96435.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/1122/96435l.jpg' } },
     trailer: { youtube_id: 'nfK6UgLra7g', url: 'https://www.youtube.com/watch?v=nfK6UgLra7g', embed_url: 'https://www.youtube-nocookie.com/embed/nfK6UgLra7g' },
     streaming: buildStreamingLinks('A Silent Voice Koe no Katachi'),
-    genres: [{ mal_id: 8, name: 'Drama' }]
+    genres: [{ mal_id: 8, name: 'Drama' }, { mal_id: 22, name: 'Romance' }, { mal_id: 36, name: 'Slice of Life' }]
   },
   {
     mal_id: 33352,
@@ -691,7 +691,7 @@ const FALLBACK_CATALOG = [
     score: 8.66,
     year: 2004,
     synopsis: 'Transformed into an old woman by a wicked witch\'s curse, young hatmaker Sophie seeks refuge in the magical walking castle of the enigmatic wizard Howl.',
-    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/1470/138723.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/1470/138723l.jpg' } },
+    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/5/75810.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/5/75810l.jpg' } },
     trailer: { youtube_id: 'iwROgK94zcM', url: 'https://www.youtube.com/watch?v=iwROgK94zcM', embed_url: 'https://www.youtube-nocookie.com/embed/iwROgK94zcM' },
     streaming: buildStreamingLinks('Howls Moving Castle'),
     genres: [{ mal_id: 22, name: 'Romance' }, { mal_id: 10, name: 'Fantasy' }, { mal_id: 2, name: 'Adventure' }]

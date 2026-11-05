@@ -137,6 +137,31 @@ function truncateText(ctx, text, maxWidth) {
   return clipped + '...';
 }
 
+const CANONICAL_TITLE_GENRES = [
+  { match: /sousou no frieren|frieren/i, genres: ['Adventure', 'Drama', 'Fantasy'] },
+  { match: /sen to chihiro|spirited away/i, genres: ['Adventure', 'Fantasy', 'Supernatural'] },
+  { match: /suzume no tojimari|\bsuzume\b/i, genres: ['Adventure', 'Fantasy', 'Mystery'] },
+  { match: /howl no ugoku shiro|howl's moving castle/i, genres: ['Adventure', 'Drama', 'Fantasy', 'Romance'] },
+];
+
+function normalizeWatchlistItemGenres(item) {
+  const title = String(item?.title || item?.action || '');
+  for (const rule of CANONICAL_TITLE_GENRES) {
+    if (rule.match.test(title)) {
+      return [...rule.genres];
+    }
+  }
+  const rawGenres = item?.genres;
+  if (!rawGenres) return [];
+  if (Array.isArray(rawGenres)) {
+    return rawGenres.map((g) => (typeof g === 'string' ? g.trim() : g?.name?.trim())).filter(Boolean);
+  }
+  return String(rawGenres)
+    .split(',')
+    .map((g) => g.trim())
+    .filter(Boolean);
+}
+
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -200,22 +225,11 @@ export default function ProfilePage() {
     const weightedScores = {};
 
     const latestItem = items[0];
-    const parseItemGenres = (rawGenres) => {
-      if (!rawGenres) return [];
-      if (Array.isArray(rawGenres)) {
-        return rawGenres.map((g) => (typeof g === 'string' ? g.trim() : g?.name?.trim())).filter(Boolean);
-      }
-      return String(rawGenres)
-        .split(',')
-        .map((g) => g.trim())
-        .filter(Boolean);
-    };
-
-    const latestGenres = parseItemGenres(latestItem?.genres);
+    const latestGenres = normalizeWatchlistItemGenres(latestItem);
 
     items.forEach((item, idx) => {
-      const gList = parseItemGenres(item.genres);
-      const recencyWeight = idx === 0 ? 3.0 : idx === 1 ? 2.0 : idx === 2 ? 1.5 : 1.0;
+      const gList = normalizeWatchlistItemGenres(item);
+      const recencyWeight = idx === 0 ? 1.35 : idx === 1 ? 1.2 : idx === 2 ? 1.1 : 1.0;
 
       gList.forEach((g) => {
         genreCounts[g] = (genreCounts[g] || 0) + 1;
@@ -242,17 +256,24 @@ export default function ProfilePage() {
       titles: genreTitles[genre] || [],
     }));
 
-    const weightedTop = Object.keys(weightedScores).sort((a, b) => weightedScores[b] - weightedScores[a]);
-    const primaryGenre = weightedTop[0] || sortedGenres[0] || null;
-    const recentGenre = latestGenres[0] || weightedTop[1] || null;
+    const primaryGenre = sortedGenres[0] || null;
+    const candidateSecondary = sortedGenres[1] || null;
+    const primaryCount = primaryGenre ? genreCounts[primaryGenre] || 0 : 0;
+    const secondaryCount = candidateSecondary ? genreCounts[candidateSecondary] || 0 : 0;
+    const secondaryGenre =
+      candidateSecondary &&
+      candidateSecondary !== primaryGenre &&
+      (secondaryCount >= 2 || primaryCount <= 1)
+        ? candidateSecondary
+        : null;
 
     let dominantVibe = 'New Watcher';
     if (totalLogged > 0) {
       const baseArchetype = ARCHETYPE_TITLES[primaryGenre] || `${primaryGenre || 'Cinema'} Watcher`;
-      if (recentGenre && recentGenre !== primaryGenre) {
-        dominantVibe = `${primaryGenre} & ${recentGenre} (${totalLogged} Titles)`;
+      if (secondaryGenre) {
+        dominantVibe = `${primaryGenre} & ${secondaryGenre} (${totalLogged} Titles)`;
       } else if (primaryGenre) {
-        dominantVibe = `${baseArchetype} (${totalLogged} Titles)`;
+        dominantVibe = `${primaryGenre} - ${baseArchetype} (${totalLogged} Titles)`;
       } else {
         dominantVibe = `Active Watcher (${totalLogged} Titles)`;
       }
@@ -1195,10 +1216,13 @@ export default function ProfilePage() {
                           id: item.id,
                           title: item.title,
                           status: item.status,
-                          genres: item.genres,
+                          genres: normalizeWatchlistItemGenres(item).join(', '),
                           action: `${item.status}: ${item.title} (Ep ${item.currentEpisode || 0}/${item.totalEpisodes || '?'})`,
                         }))
-                      : journey
+                      : journey.map((j) => ({
+                          ...j,
+                          genres: normalizeWatchlistItemGenres(j).join(', '),
+                        }))
                     ).map((j, i) => (
                       <div
                         key={j.id || i}

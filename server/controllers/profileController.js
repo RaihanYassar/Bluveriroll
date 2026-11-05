@@ -81,6 +81,27 @@ function buildTarotDeck({ titles = [], topGenres = [], averageRating = 9.0, tota
   };
 }
 
+const CANONICAL_TITLE_GENRES = [
+  { match: /sousou no frieren|frieren/i, genres: ['Adventure', 'Drama', 'Fantasy'] },
+  { match: /sen to chihiro|spirited away/i, genres: ['Adventure', 'Fantasy', 'Supernatural'] },
+  { match: /suzume no tojimari|\bsuzume\b/i, genres: ['Adventure', 'Fantasy', 'Mystery'] },
+  { match: /howl no ugoku shiro|howl's moving castle/i, genres: ['Adventure', 'Drama', 'Fantasy', 'Romance'] }
+];
+
+function parseAndNormalizeGenres(item) {
+  const title = String(item?.title || '');
+  for (const rule of CANONICAL_TITLE_GENRES) {
+    if (rule.match.test(title)) {
+      return [...rule.genres];
+    }
+  }
+  if (!item?.genres) return [];
+  return String(item.genres)
+    .split(',')
+    .map((g) => g.trim())
+    .filter(Boolean);
+}
+
 class ProfileController {
   static async getAnimeDNA(req, res, next) {
     try {
@@ -103,22 +124,15 @@ class ProfileController {
       const genreCounts = {};
       const weightedScores = {};
       const latestItem = items[0] || null;
-      const latestItemGenres = latestItem?.genres
-        ? latestItem.genres.split(',').map((g) => g.trim()).filter(Boolean)
-        : [];
+      const latestItemGenres = latestItem ? parseAndNormalizeGenres(latestItem) : [];
 
       items.forEach((item, index) => {
-        if (item.genres) {
-          const recencyWeight = index === 0 ? 3.0 : index === 1 ? 2.0 : index === 2 ? 1.5 : 1.0;
-          item.genres
-            .split(',')
-            .map((g) => g.trim())
-            .filter(Boolean)
-            .forEach((g) => {
-              genreCounts[g] = (genreCounts[g] || 0) + 1;
-              weightedScores[g] = (weightedScores[g] || 0) + recencyWeight;
-            });
-        }
+        const gList = parseAndNormalizeGenres(item);
+        const recencyWeight = index === 0 ? 1.35 : index === 1 ? 1.2 : index === 2 ? 1.1 : 1.0;
+        gList.forEach((g) => {
+          genreCounts[g] = (genreCounts[g] || 0) + 1;
+          weightedScores[g] = (weightedScores[g] || 0) + recencyWeight;
+        });
       });
 
       const sortedGenres = Object.keys(genreCounts).sort((a, b) => {
@@ -137,20 +151,24 @@ class ProfileController {
         isRecent: latestItemGenres.includes(genre)
       }));
 
-      const weightedTopGenres = Object.keys(weightedScores).sort(
-        (a, b) => weightedScores[b] - weightedScores[a]
-      );
-
-      const primaryGenre = weightedTopGenres[0] || favoriteGenres[0] || null;
-      const recentGenre = latestItemGenres[0] || weightedTopGenres[1] || null;
+      const primaryGenre = favoriteGenres[0] || null;
+      const candidateSecondary = favoriteGenres[1] || null;
+      const primaryCount = primaryGenre ? genreCounts[primaryGenre] || 0 : 0;
+      const secondaryCount = candidateSecondary ? genreCounts[candidateSecondary] || 0 : 0;
+      const secondaryGenre =
+        candidateSecondary &&
+        candidateSecondary !== primaryGenre &&
+        (secondaryCount >= 2 || primaryCount <= 1)
+          ? candidateSecondary
+          : null;
 
       let dominantVibe = 'New Watcher';
       if (totalLogged > 0) {
         const baseTitle = ARCHETYPE_TITLES[primaryGenre] || `${primaryGenre || 'Cinema'} Watcher`;
-        if (recentGenre && recentGenre !== primaryGenre) {
-          dominantVibe = `${primaryGenre} & ${recentGenre} (${totalLogged} Titles)`;
+        if (secondaryGenre) {
+          dominantVibe = `${primaryGenre} & ${secondaryGenre} (${totalLogged} Titles)`;
         } else if (primaryGenre) {
-          dominantVibe = `${baseTitle} (${totalLogged} Titles)`;
+          dominantVibe = `${primaryGenre} - ${baseTitle} (${totalLogged} Titles)`;
         } else if (averageRating >= 8.5) {
           dominantVibe = `Selective Curator (${totalLogged} Titles)`;
         } else {
@@ -187,18 +205,21 @@ class ProfileController {
         limit: 15
       });
 
-      const history = items.map((item) => ({
-        id: item.id,
-        animeId: item.animeId,
-        title: item.title,
-        status: item.status,
-        score: item.score,
-        genres: item.genres,
-        currentEpisode: item.currentEpisode,
-        totalEpisodes: item.totalEpisodes,
-        action: `${item.status}: ${item.title} (Ep ${item.currentEpisode || 0}/${item.totalEpisodes || '?'})`,
-        updatedAt: item.updatedAt
-      }));
+      const history = items.map((item) => {
+        const normalizedGenres = parseAndNormalizeGenres(item);
+        return {
+          id: item.id,
+          animeId: item.animeId,
+          title: item.title,
+          status: item.status,
+          score: item.score,
+          genres: normalizedGenres.join(', ') || item.genres,
+          currentEpisode: item.currentEpisode,
+          totalEpisodes: item.totalEpisodes,
+          action: `${item.status}: ${item.title} (Ep ${item.currentEpisode || 0}/${item.totalEpisodes || '?'})`,
+          updatedAt: item.updatedAt
+        };
+      });
 
       res.status(200).json({
         message: 'Watch Journey history retrieved successfully',

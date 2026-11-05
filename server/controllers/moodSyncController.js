@@ -5,7 +5,7 @@ const jikanService = require('../services/jikanService');
 const MOOD_ARCHETYPES = [
   {
     id: 'healing',
-    regex: /capek|lelah|stres|stress|exhaust|tired|unwind|relax|healing|tenang|santai|nyaman|cozy|warm|comfort|burnout|kerja|kuliah|adem/i,
+    regex: /\b(capek|lelah|stres|stress|exhaust|tired|unwind|relax|healing|tenang|santai|nyaman|cozy|warm|comfort|burnout|kerja|kuliah|adem)\b/i,
     emotionalTone: 'Tenang & Menyejukkan',
     moodAnalysis:
       'Keliatannya lo lagi butuh istirahat dari rutinitas yang padat. Tontonan dengan alur santai, visual yang adem di mata, dan cerita tanpa beban berat bakal pas banget buat nemenin waktu istirahat lo.',
@@ -61,7 +61,7 @@ const MOOD_ARCHETYPES = [
   },
   {
     id: 'sad_cathartic',
-    regex: /sedih|galau|nangis|cry|tear|patah hati|heartbreak|kesepian|lonely|melanchol|rindu|emosional|emotional|rainy|hujan|drama|haru|sepi/i,
+    regex: /\b(sedih|galau|nangis|cry|tear|patah hati|heartbreak|kesepian|lonely|melankolis|rindu|emosional|emotional|rainy|hujan|drama|haru|sepi)\b/i,
     emotionalTone: 'Emosional & Menyentuh',
     moodAnalysis:
       'Lagi pengen nonton cerita yang dalem dan berbekas di hati. Kadang nonton drama yang emosional justru bikin perasaan jadi jauh lebih plong setelah filmnya selesai.',
@@ -110,7 +110,7 @@ const MOOD_ARCHETYPES = [
   },
   {
     id: 'hype_action',
-    regex: /hype|action|aksi|semangat|adrenalin|dopamin|epic|seru|bertarung|fight|battle|supernatural|op|keren|bakar semangat|motivasi|olahraga|sport|merinding/i,
+    regex: /\b(hype|action|aksi|semangat|adrenalin|dopamin|epic|seru|bertarung|pertarungan|fight|battle|supernatural|keren|bakar semangat|motivasi|olahraga|sport|merinding)\b/i,
     emotionalTone: 'Penuh Aksi & Energi',
     moodAnalysis:
       'Lagi butuh tontonan yang cepat, seru, dan gak bertele-tele. Pilihan di bawah ini punya koreografi pertarungan yang rapi, tempo cepat, dan momen klimaks yang bikin betah maraton.',
@@ -166,7 +166,7 @@ const MOOD_ARCHETYPES = [
   },
   {
     id: 'mystery_scifi',
-    regex: /misteri|mystery|mikir|twist|plot twist|sci-fi|time travel|time-travel|psikologi|psycholog|thriller|tegang|dark|gelap|detektif|pintar|cyberpunk|strategi|logika/i,
+    regex: /\b(misteri|mystery|mikir|twist|plot twist|sci-fi|time travel|time-travel|psikologi|psikologis|thriller|tegang|dark|gelap|detektif|pintar|cyberpunk|strategi|logika|teka-teki)\b/i,
     emotionalTone: 'Misteri & Adu Strategi',
     moodAnalysis:
       'Lagi pengen cerita yang ngajak mikir dan penuh teka-teki. Deretan judul ini ngandelin alur investigasi, permainan psikologis, dan kejutan cerita yang rapi.',
@@ -215,7 +215,7 @@ const MOOD_ARCHETYPES = [
   },
   {
     id: 'comedy_laugh',
-    regex: /komedi|comedy|lucu|ketawa|ngakak|funny|absurd|kocak|pusing|hibur|laugh/i,
+    regex: /\b(komedi|comedy|lucu|ketawa|ngakak|funny|absurd|kocak|pusing|hibur|hiburan|laugh)\b/i,
     emotionalTone: 'Komedi Ringan & Segar',
     moodAnalysis:
       'Lagi butuh hiburan ringan buat nyegerin pikiran. Pilihan anime komedi ini punya karakter yang ekspresif dan kejadian konyol yang pas buat ditonton santai.',
@@ -264,7 +264,7 @@ const MOOD_ARCHETYPES = [
   },
   {
     id: 'romance_sweet',
-    regex: /romantis|romance|cinta|baper|love|wholesome|couple|pacar|gemes|senyum|manis|chemistry/i,
+    regex: /\b(romantis|romance|cinta|baper|love|wholesome|couple|pacar|gemes|senyum|manis|chemistry)\b/i,
     emotionalTone: 'Romansa Hangat',
     moodAnalysis:
       'Lagi pengen nonton cerita romansa yang manis dan enak diikuti. Pilihan di bawah ini punya interaksi karakter yang natural tanpa konflik yang dibuat-buat.',
@@ -314,18 +314,30 @@ const MOOD_ARCHETYPES = [
 ];
 
 function buildSmartMoodFallback(moodPrompt) {
-  const matched =
-    MOOD_ARCHETYPES.find((arch) => arch.regex.test(moodPrompt)) || MOOD_ARCHETYPES[0];
+  const cleanedPrompt = String(moodPrompt || '').replace(/\b(tanpa|gak|nggak|tidak)\s+mikir\b/gi, 'santai');
+
+  let bestMatch = MOOD_ARCHETYPES[0];
+  let highestScore = 0;
+
+  for (const arch of MOOD_ARCHETYPES) {
+    const globalRegex = new RegExp(arch.regex.source, 'gi');
+    const matches = cleanedPrompt.match(globalRegex);
+    const count = matches ? matches.length : 0;
+    if (count > highestScore) {
+      highestScore = count;
+      bestMatch = arch;
+    }
+  }
 
   return {
-    archetypeId: matched.id,
-    moodAnalysis: matched.moodAnalysis,
-    emotionalTone: matched.emotionalTone,
-    vibeDescription: matched.vibeDescription,
-    recommendedGenres: matched.recommendedGenres,
-    jikanGenreIds: matched.jikanGenreIds,
-    keywords: matched.keywords,
-    curatedPicks: matched.curatedPicks
+    archetypeId: bestMatch.id,
+    moodAnalysis: bestMatch.moodAnalysis,
+    emotionalTone: bestMatch.emotionalTone,
+    vibeDescription: bestMatch.vibeDescription,
+    recommendedGenres: bestMatch.recommendedGenres,
+    jikanGenreIds: bestMatch.jikanGenreIds,
+    keywords: bestMatch.keywords,
+    curatedPicks: bestMatch.curatedPicks
   };
 }
 

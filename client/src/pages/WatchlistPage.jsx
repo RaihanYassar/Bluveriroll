@@ -9,6 +9,7 @@ import {
   setWatchlistFilter,
 } from '../store/slices/watchlistSlice';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { resolveAnimeImage, handleAnimeImageError } from '../utils/imageHelper';
 
 const TABS = ['All', 'Plan to Watch', 'Watching', 'Completed', 'On Hold', 'Dropped'];
 const STATUS_OPTIONS = ['Plan to Watch', 'Watching', 'Completed', 'On Hold', 'Dropped'];
@@ -129,8 +130,10 @@ export default function WatchlistPage() {
               <div className="flex gap-4">
                 <Link to={`/anime/${item.animeId}`} className="shrink-0">
                   <img
-                    src={item.imageUrl}
+                    src={resolveAnimeImage(item)}
                     alt={item.title}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => handleAnimeImageError(e, item)}
                     className="w-20 h-28 object-cover rounded-xl bg-slate-950 border border-slate-800"
                   />
                 </Link>
