@@ -58,4 +58,3 @@ class WatchlistController {
 }
 
 module.exports = WatchlistController;
-

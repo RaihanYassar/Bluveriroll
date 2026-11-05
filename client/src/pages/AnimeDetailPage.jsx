@@ -42,6 +42,7 @@ export default function AnimeDetailPage() {
         score: anime.score,
         currentEpisode: 0,
         totalEpisodes: anime.episodes || 0,
+        genres: anime.genres?.map((g) => g.name) || [],
       });
       setAdded(true);
       setTimeout(() => setAdded(false), 2500);
