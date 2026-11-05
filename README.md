@@ -1,9 +1,6 @@
-# BLUVERIROLL — AI-Powered Movie & Anime Discovery Platform
+# BLUVERIROLL
 
-**BLUVERIROLL** adalah aplikasi Full-Stack JavaScript (Express.js + PostgreSQL + React + Redux Toolkit) untuk menemukan rekomendasi Movie & Anime berdasarkan suasana hati (*MoodSync AI*), mengelola koleksi tontonan pribadi (*Personal Watchlist* — Full CRUD), dan menganalisis profil selera tontonan (*Cinema & Anime DNA Profile*).
-
-- **Product Requirements Document**: [PRD.md](./PRD.md)
-- **Architecture Requirements Document**: [ARD.md](./ARD.md)
+Aplikasi Full-Stack JavaScript (Express.js, PostgreSQL, React, Redux Toolkit) untuk eksplorasi katalog film dan anime, rekomendasi berbasis suasana hati (MoodSync), pengelolaan daftar tontonan pribadi (Watchlist), dan statistik profil tontonan.
 
 ---
 
