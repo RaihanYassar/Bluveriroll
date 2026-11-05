@@ -71,6 +71,7 @@ export default function HomePage() {
     selectedGenre,
     searchQuery,
     currentPage,
+    loadedSignature,
     hasNextPage,
     loading,
     loadingMore,
@@ -82,13 +83,24 @@ export default function HomePage() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (searchQuery.trim() || selectedGenre) {
+    const isSearching = Boolean(searchQuery.trim() || selectedGenre);
+    const targetPage = currentPage || 1;
+    const expectedSignature = isSearching
+      ? `search|${activeType}|${selectedGenre}|${searchQuery.trim()}|${targetPage}`
+      : `popular|${activeType}|${activeFilter}|${targetPage}`;
+    const currentList = isSearching ? searchResults : popularList;
+
+    if (loadedSignature === expectedSignature && currentList.length > 0) {
+      return;
+    }
+
+    if (isSearching) {
       dispatch(
         searchAnimeCatalog({
           q: searchQuery,
           type: activeType,
           genres: selectedGenre,
-          page: 1,
+          page: targetPage,
           limit: 25,
           append: false,
         })
@@ -98,7 +110,7 @@ export default function HomePage() {
         fetchPopularAnime({
           type: activeType,
           filter: activeFilter,
-          page: 1,
+          page: targetPage,
           limit: 25,
           append: false,
         })

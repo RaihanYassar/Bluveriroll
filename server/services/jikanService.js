@@ -97,8 +97,13 @@ const parseGenreIds = (genresParam) => {
   if (!genresParam) return [];
   return String(genresParam)
     .split(',')
-    .map((id) => Number(id.trim()))
-    .filter((id) => !Number.isNaN(id) && id > 0);
+    .map((part) => {
+      const trimmed = part.trim();
+      const num = Number(trimmed);
+      if (!Number.isNaN(num) && num > 0) return num;
+      return NAME_TO_GENRE_ID[trimmed.toLowerCase()] || 0;
+    })
+    .filter((id) => id > 0);
 };
 
 const fetchFromAniList = async (params = {}) => {
@@ -695,6 +700,136 @@ const FALLBACK_CATALOG = [
     trailer: { youtube_id: 'iwROgK94zcM', url: 'https://www.youtube.com/watch?v=iwROgK94zcM', embed_url: 'https://www.youtube-nocookie.com/embed/iwROgK94zcM' },
     streaming: buildStreamingLinks('Howls Moving Castle'),
     genres: [{ mal_id: 22, name: 'Romance' }, { mal_id: 10, name: 'Fantasy' }, { mal_id: 2, name: 'Adventure' }]
+  },
+
+  // --- HORROR / DARK THRILLER / SUPERNATURAL (Genre 14, 41, 7) ---
+  {
+    mal_id: 11111,
+    title: 'Another',
+    title_japanese: 'アナザー',
+    type: 'TV',
+    episodes: 12,
+    status: 'Finished Airing',
+    duration: '24 min per ep',
+    score: 7.47,
+    year: 2012,
+    synopsis: 'Transfer student Kouichi Sakakibara notices an eerie atmosphere in Class 3-3 and a mysterious girl with an eyepatch named Mei Misaki, uncovering a deadly curse that claims students one by one.',
+    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/4/75509.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/4/75509l.jpg' } },
+    trailer: { youtube_id: null, url: null, embed_url: null },
+    streaming: buildStreamingLinks('Another Anime'),
+    genres: [{ mal_id: 14, name: 'Horror' }, { mal_id: 7, name: 'Mystery' }, { mal_id: 37, name: 'Supernatural' }, { mal_id: 41, name: 'Suspense' }]
+  },
+  {
+    mal_id: 37779,
+    title: 'Yakusoku no Neverland (The Promised Neverland)',
+    title_japanese: '約束のネバーランド',
+    type: 'TV',
+    episodes: 12,
+    status: 'Finished Airing',
+    duration: '22 min per ep',
+    score: 8.49,
+    year: 2019,
+    synopsis: 'Orphans Emma, Norman, and Ray discover the horrifying truth behind Grace Field House and must orchestrate a desperate escape before they are harvested by demons.',
+    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/1830/118780.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/1830/118780l.jpg' } },
+    trailer: { youtube_id: 'ApLudqucq-s', url: 'https://www.youtube.com/watch?v=ApLudqucq-s', embed_url: 'https://www.youtube-nocookie.com/embed/ApLudqucq-s' },
+    streaming: buildStreamingLinks('The Promised Neverland'),
+    genres: [{ mal_id: 14, name: 'Horror' }, { mal_id: 7, name: 'Mystery' }, { mal_id: 41, name: 'Suspense' }, { mal_id: 40, name: 'Psychological' }]
+  },
+  {
+    mal_id: 22535,
+    title: 'Kiseijuu: Sei no Kakuritsu (Parasyte: The Maxim)',
+    title_japanese: '寄生獣 セイの格率',
+    type: 'TV',
+    episodes: 24,
+    status: 'Finished Airing',
+    duration: '23 min per ep',
+    score: 8.32,
+    year: 2014,
+    synopsis: 'High schooler Shinichi Izumi is partially infected by a flesh-eating alien parasite that takes over his right hand, forcing the two to coexist against predatory monsters disguised as humans.',
+    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/3/73178.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/3/73178l.jpg' } },
+    trailer: { youtube_id: 'rj63TDpaBWk', url: 'https://www.youtube.com/watch?v=rj63TDpaBWk', embed_url: 'https://www.youtube-nocookie.com/embed/rj63TDpaBWk' },
+    streaming: buildStreamingLinks('Parasyte The Maxim'),
+    genres: [{ mal_id: 14, name: 'Horror' }, { mal_id: 1, name: 'Action' }, { mal_id: 24, name: 'Sci-Fi' }, { mal_id: 41, name: 'Suspense' }]
+  },
+  {
+    mal_id: 934,
+    title: 'Higurashi no Naku Koro ni (When They Cry)',
+    title_japanese: 'ひぐらしのなく頃に',
+    type: 'TV',
+    episodes: 26,
+    status: 'Finished Airing',
+    duration: '24 min per ep',
+    score: 7.88,
+    year: 2006,
+    synopsis: 'Keiichi Maebara moves to the quiet rural village of Hinamizawa, only to discover a history of grisly murders and paranoia connected to the annual Watanagashi festival.',
+    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/12/19634.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/12/19634l.jpg' } },
+    trailer: { youtube_id: null, url: null, embed_url: null },
+    streaming: buildStreamingLinks('Higurashi When They Cry'),
+    genres: [{ mal_id: 14, name: 'Horror' }, { mal_id: 7, name: 'Mystery' }, { mal_id: 40, name: 'Psychological' }, { mal_id: 37, name: 'Supernatural' }]
+  },
+  {
+    mal_id: 7724,
+    title: 'Shiki',
+    title_japanese: '屍鬼',
+    type: 'TV',
+    episodes: 22,
+    status: 'Finished Airing',
+    duration: '22 min per ep',
+    score: 7.71,
+    year: 2010,
+    synopsis: 'During a sweltering summer in the isolated village of Sotoba, a series of mysterious deaths begins right after a strange family moves into the castle on the hill.',
+    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/1531/119165.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/1531/119165l.jpg' } },
+    trailer: { youtube_id: null, url: null, embed_url: null },
+    streaming: buildStreamingLinks('Shiki Anime'),
+    genres: [{ mal_id: 14, name: 'Horror' }, { mal_id: 7, name: 'Mystery' }, { mal_id: 37, name: 'Supernatural' }, { mal_id: 41, name: 'Suspense' }]
+  },
+  {
+    mal_id: 437,
+    title: 'Perfect Blue',
+    title_japanese: 'パーフェクトブルー',
+    type: 'Movie',
+    episodes: 1,
+    status: 'Finished Airing',
+    duration: '1 hr 21 min',
+    score: 8.55,
+    year: 1998,
+    synopsis: 'Pop idol Mima Kirigoe leaves her music group to pursue acting, but an obsessed stalker and unsettling hallucinations blur the boundary between reality and nightmare.',
+    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/1254/134212.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/1254/134212l.jpg' } },
+    trailer: { youtube_id: null, url: null, embed_url: null },
+    streaming: buildStreamingLinks('Perfect Blue'),
+    genres: [{ mal_id: 14, name: 'Horror' }, { mal_id: 8, name: 'Drama' }, { mal_id: 40, name: 'Psychological' }, { mal_id: 41, name: 'Suspense' }]
+  },
+  {
+    mal_id: 13125,
+    title: 'Shinsekai yori (From the New World)',
+    title_japanese: '新世界より',
+    type: 'TV',
+    episodes: 25,
+    status: 'Finished Airing',
+    duration: '22 min per ep',
+    score: 8.26,
+    year: 2012,
+    synopsis: 'Set a millennium in the future where humans possess psychokinetic powers, Saki Watanabe and her friends uncover the dark, terrifying truth behind their seemingly utopian society.',
+    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/12/36685.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/12/36685l.jpg' } },
+    trailer: { youtube_id: null, url: null, embed_url: null },
+    streaming: buildStreamingLinks('Shinsekai yori From the New World'),
+    genres: [{ mal_id: 14, name: 'Horror' }, { mal_id: 7, name: 'Mystery' }, { mal_id: 24, name: 'Sci-Fi' }, { mal_id: 37, name: 'Supernatural' }]
+  },
+  {
+    mal_id: 49596,
+    title: 'Blue Lock',
+    title_japanese: 'ブルーロック',
+    type: 'TV',
+    episodes: 24,
+    status: 'Finished Airing',
+    duration: '24 min per ep',
+    score: 8.21,
+    year: 2022,
+    synopsis: 'Three hundred high school strikers are locked inside a high-stakes training facility called Blue Lock, competing in ruthless survival matches to become Japan\'s ultimate egoist striker.',
+    images: { jpg: { image_url: 'https://cdn.myanimelist.net/images/anime/1258/126929.jpg', large_image_url: 'https://cdn.myanimelist.net/images/anime/1258/126929l.jpg' } },
+    trailer: { youtube_id: 'Auw1Qy2k29s', url: 'https://www.youtube.com/watch?v=Auw1Qy2k29s', embed_url: 'https://www.youtube-nocookie.com/embed/Auw1Qy2k29s' },
+    streaming: buildStreamingLinks('Blue Lock'),
+    genres: [{ mal_id: 30, name: 'Sports' }, { mal_id: 41, name: 'Suspense' }]
   }
 ];
 
