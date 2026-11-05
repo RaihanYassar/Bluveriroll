@@ -35,6 +35,7 @@ import {
   resetSearch,
 } from '../store/slices/animeSlice';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { resolveAnimeImage, handleAnimeImageError } from '../utils/imageHelper';
 
 const FORMAT_TABS = [
   { id: 'all', label: 'All Formats', icon: Flame },
@@ -330,8 +331,10 @@ export default function HomePage() {
               >
                 <div className="relative h-64 sm:h-80 overflow-hidden bg-slate-950">
                   <img
-                    src={spotlightItem.images?.jpg?.large_image_url || spotlightItem.images?.jpg?.image_url}
+                    src={resolveAnimeImage(spotlightItem)}
                     alt={spotlightItem.title}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => handleAnimeImageError(e, spotlightItem)}
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition duration-500 opacity-75"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
@@ -617,8 +620,10 @@ export default function HomePage() {
                 >
                   <div className="aspect-[3/4] overflow-hidden bg-slate-950 relative">
                     <img
-                      src={item.images?.jpg?.large_image_url || item.images?.jpg?.image_url}
+                      src={resolveAnimeImage(item)}
                       alt={item.title}
+                      referrerPolicy="no-referrer"
+                      onError={(e) => handleAnimeImageError(e, item)}
                       className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                       loading="lazy"
                     />

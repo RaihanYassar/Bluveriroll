@@ -36,6 +36,7 @@ import {
 } from '../store/slices/moodSyncSlice';
 import { addWatchlistEntry } from '../store/slices/watchlistSlice';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { resolveAnimeImage, handleAnimeImageError } from '../utils/imageHelper';
 
 const MOOD_CARDS = [
   {
@@ -63,7 +64,7 @@ const MOOD_CARDS = [
     icon: CloudRain,
     color: 'from-sky-500/20 to-blue-500/5 border-sky-500/30 text-sky-300',
     prompt:
-      'Lagi suasana malam tenang, pengen nonton film atau anime drama emosional yang ceritanya dalem dan berkesan.',
+      'Lagi suasana malam hening dan galau, pengen nonton film atau anime drama emosional yang sedih dan menyentuh hati.',
   },
   {
     id: 'mystery',
@@ -72,7 +73,7 @@ const MOOD_CARDS = [
     icon: Brain,
     color: 'from-purple-500/20 to-indigo-500/5 border-purple-500/30 text-purple-300',
     prompt:
-      'Pengen cerita misteri, perjalanan waktu, atau thriller psikologis yang penuh teka-teki dan bikin penasaran tiap episode.',
+      'Pengen cerita misteri, perjalanan waktu, atau thriller psikologis yang penuh teka-teki dan adu strategi di tiap babak.',
   },
   {
     id: 'comedy',
@@ -81,7 +82,7 @@ const MOOD_CARDS = [
     icon: Smile,
     color: 'from-yellow-500/20 to-amber-500/5 border-yellow-500/30 text-yellow-300',
     prompt:
-      'Lagi butuh hiburan ringan, pengen anime komedi yang karakternya kocak dan bikin ketawa tanpa mikir berat.',
+      'Lagi butuh hiburan segar, pengen anime komedi yang karakternya kocak, absurd, dan langsung bikin ketawa ngakak.',
   },
   {
     id: 'romance',
@@ -90,7 +91,7 @@ const MOOD_CARDS = [
     icon: Heart,
     color: 'from-rose-500/20 to-pink-500/5 border-rose-500/30 text-rose-300',
     prompt:
-      'Pengen tontonan romantis dengan interaksi karakter yang natural, hangat, dan visual yang memanjakan mata.',
+      'Pengen tontonan romantis tentang kisah cinta yang manis, chemistry karakter yang gemes, dan bikin senyum sendiri.',
   },
 ];
 
@@ -178,7 +179,7 @@ export default function MoodSyncPage() {
     const payload = {
       animeId: item.mal_id,
       title: item.title,
-      imageUrl: item.images?.jpg?.large_image_url || item.images?.jpg?.image_url,
+      imageUrl: resolveAnimeImage(item),
       status: 'Plan to Watch',
       score: item.score || null,
       currentEpisode: 0,
@@ -511,8 +512,10 @@ export default function MoodSyncPage() {
                         {/* Top Poster & Badges */}
                         <Link to={`/anime/${item.mal_id}`} className="block relative h-52 sm:h-56 overflow-hidden bg-slate-950">
                           <img
-                            src={item.images?.jpg?.large_image_url || item.images?.jpg?.image_url}
+                            src={resolveAnimeImage(item)}
                             alt={item.title}
+                            referrerPolicy="no-referrer"
+                            onError={(e) => handleAnimeImageError(e, item)}
                             className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                             loading="lazy"
                           />

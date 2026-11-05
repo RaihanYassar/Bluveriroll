@@ -7,11 +7,13 @@ export default function Footer() {
         <div className="flex items-center gap-2">
           <Film className="w-4 h-4 text-cyan-400" />
           <span className="font-bold text-slate-300">BLUVERIROLL</span>
-          <span>— AI Movie & Anime Discovery Platform</span>
+          <span className="text-slate-600">|</span>
+          <span>Movie & Anime Discovery Platform</span>
         </div>
-        <p>© {new Date().getFullYear()} BLUVERIROLL • Powered by OpenAI, Pollinations AI & Jikan API</p>
+        <p>© {new Date().getFullYear()} BLUVERIROLL. All rights reserved.</p>
       </div>
     </footer>
   );
 }
+
 

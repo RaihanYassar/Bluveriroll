@@ -19,6 +19,7 @@ import {
 import { fetchAnimeDetail, fetchAnimeEpisodes } from '../store/slices/animeSlice';
 import { addWatchlistEntry } from '../store/slices/watchlistSlice';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { resolveAnimeImage, handleAnimeImageError } from '../utils/imageHelper';
 
 export default function AnimeDetailPage() {
   const { id } = useParams();
@@ -187,8 +188,10 @@ export default function AnimeDetailPage() {
         <div className="space-y-4">
           <div className="rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-900">
             <img
-              src={anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url}
+              src={resolveAnimeImage(anime)}
               alt={anime.title}
+              referrerPolicy="no-referrer"
+              onError={(e) => handleAnimeImageError(e, anime)}
               className="w-full object-cover"
             />
           </div>
