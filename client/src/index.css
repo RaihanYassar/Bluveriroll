@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: #020617;
+    color: #f8fafc;
+  }
+
+  /* Custom sleek dark scrollbar for main window & vertical lists */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #090d16;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 9999px;
+    border: 2px solid #090d16;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #06b6d4;
+  }
+}
+
+/* Utility to completely hide scrollbars on horizontal pill carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Fix Google OAuth iframe white background box when root uses color-scheme: dark */
+.google-oauth-wrapper,
+.google-oauth-wrapper iframe {
+  color-scheme: light !important;
+  background-color: transparent !important;
+  border-radius: 9999px !important;
+  overflow: hidden !important;
+}
