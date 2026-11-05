@@ -44,7 +44,7 @@ npm run dev
 
 ## REST API Documentation
 
-Base URL: `http://localhost:3000/api`
+Base URL: `https://bluveriroll.bluveri.web.id/api` (Local: `http://localhost:3000/api`)
 
 ### 1. Authentication Endpoints
 
